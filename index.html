@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COMP6012 Week 12 · Security People Will Actually Use</title>
+<meta name="theme-color" content="#f7f3ea">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="progress"></div>
+<div class="cursor-glow"></div>
+
+<header class="topbar">
+  <a class="brand" href="#top"><span class="brand-badge">W12</span><span><b>COMP6012</b><small>Usable Security + Threat Intelligence</small></span></a>
+  <nav>
+    <a href="#least">Least Privilege</a>
+    <a href="#pentest">Threat-Led Test</a>
+    <a href="#risk">Risk</a>
+    <a href="#privacy">Privacy</a>
+    <a href="#social">Humans</a>
+    <a href="#mental">Mental Models</a>
+    <a href="#architecture">Architecture</a>
+  </nav>
+  <div class="xp"><span>LAB XP</span><b id="xp">0</b></div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">WEEK 12 · USABLE SECURITY</div>
+    <h1>SECURITY<br>PEOPLE WILL<br><span>ACTUALLY USE.</span></h1>
+    <p>Threat intelligence is most useful when it changes how systems are designed, tested and used. This lab asks one question all class: can we make the secure choice the easy choice?</p>
+    <div class="hero-actions">
+      <button class="btn primary" data-jump="#least">Start the lab</button>
+      <button class="btn ghost" data-jump="#final">Final challenge</button>
+    </div>
+    <div class="hero-facts">
+      <article><b>7</b><span>teaching zones</span></article>
+      <article><b>7</b><span>interactive games</span></article>
+      <article><b>21</b><span>PPT deep-dive flips</span></article>
+      <article><b>1</b><span>goal: usable + secure</span></article>
+    </div>
+  </div>
+
+  <div class="hero-stage">
+    <div class="stage-grid"></div>
+    <div class="human-card">
+      <span class="person-head"></span><span class="person-body"></span>
+      <b>USER</b><small>wants to finish a task</small>
+    </div>
+    <div class="shield-card">
+      <span class="shield-icon">◆</span><b>SECURITY</b><small>wants to reduce risk</small>
+    </div>
+    <div class="product-card">
+      <span>USABLE SECURITY</span>
+      <b>Make the secure path<br>the natural path.</b>
+      <small id="heroMessage">Least privilege · consent · privacy · mental models · DevSecOps</small>
+    </div>
+    <svg class="stage-lines" viewBox="0 0 700 560" aria-hidden="true">
+      <path d="M140 315 C240 260 285 260 350 285"/>
+      <path d="M560 315 C470 260 420 260 350 285"/>
+      <path d="M350 330 C350 390 350 410 350 460"/>
+    </svg>
+    <div class="moving-dot d1"></div><div class="moving-dot d2"></div>
+    <div class="stage-note"><b>SHIFT LEFT</b><span>Bring threat analysis into design — not after deployment.</span></div>
+  </div>
+</section>
+
+<section class="zone" id="least">
+  <div class="zone-head">
+    <div><span class="zone-no">01</span><div class="eyebrow">THREAT MODELING FOR USABLE SECURITY</div><h2>Give people enough access — not all access.</h2></div>
+    <p>Least privilege reduces the blast radius without blocking legitimate work. The design challenge is not “maximum restriction”; it is matching authority to the real task.</p>
+  </div>
+
+  <div class="permission-lab">
+    <div class="role-board">
+      <div class="board-label">GAME 1 · PERMISSION SCULPTOR</div>
+      <h3 id="roleTitle">Bank teller: serve a customer.</h3>
+      <p id="roleGoal">Give the teller enough access to complete the task, but do not hand out unrelated authority.</p>
+      <div class="permission-list" id="permissionList"></div>
+      <button class="check-btn" id="checkPermissions">Check access design</button>
+      <div class="feedback" id="permissionFeedback">Select permissions, then test the design.</div>
+    </div>
+    <div class="role-visual">
+      <div class="access-door">
+        <span>ACCESS GATE</span>
+        <div class="door-status" id="doorStatus">TOO MUCH?</div>
+      </div>
+      <div class="role-chip" id="roleChip"><b>BANK TELLER</b><small>job function ≠ administrator</small></div>
+      <div class="principle"><b>Least privilege</b><span>Minimum authority needed for the mainstream task.</span></div>
+    </div>
+  </div>
+
+  <div class="case-pair">
+    <article>
+      <span>APT29 / SOLARWINDS</span>
+      <h3>Why UAC bypass matters less when admin rights are absent.</h3>
+      <p>The lecture’s mitigation is simple: remove unnecessary administrator membership. If the user does not permanently hold admin power, bypassing a prompt buys the attacker far less.</p>
+    </article>
+    <article>
+      <span>APPLEJEUS</span>
+      <h3>Consent helps — but the system still needs a second layer.</h3>
+      <p>Users may click “run” anyway. The design should warn clearly, highlight the safe choice, scan untrusted files and block concealed malicious execution.</p>
+    </article>
+  </div>
+
+  <div class="deep-grid">
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 01</small><h3>APT29 + UAC bypass</h3><p>Privilege escalation and defense evasion meet least privilege.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>APT29 threat-model lesson</h3><ul><li>APT29 used privilege escalation and defense evasion techniques.</li><li>The lecture describes payload injection into rundll32.exe to bypass UAC prompts.</li><li>Detection includes filesystem monitoring, process-injection detection, logs and registry behavior.</li><li>Mitigation: remove users from administrator groups and enforce least privilege.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 02</small><h3>Easy-task hardening</h3><p>Authority should match the task, not a powerful generic role.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>Task-based access</h3><ul><li>A bank teller may need read-write access for customer service.</li><li>A doctor needs sufficient patient-data authority without timeouts that disrupt emergency care.</li><li>Developers can accidentally receive access to unrelated sensitive data such as salaries.</li><li>Recommended default: automatically restrain access and show a clear denial message.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 03</small><h3>Consent + system response</h3><p>Do not rely on the user being perfect.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>AppleJeus design lesson</h3><ul><li>AppleJeus required victims to execute an MSI installer.</li><li>The design should warn about unknown-source files and make the safe option visually clear.</li><li>Because users still make mistakes, the system should scan, warn and block concealed malicious programs.</li><li>Consent and automated response must be designed together.</li></ul></div></div></button>
+  </div>
+</section>
+
+<section class="zone alt" id="pentest">
+  <div class="zone-head">
+    <div><span class="zone-no">02</span><div class="eyebrow">INTELLIGENCE-LED PENETRATION TESTING</div><h2>Do not test every attacker. Test the attacker who matters.</h2></div>
+    <p>Traditional penetration testing finds weaknesses. Intelligence-led testing asks which adversary is most relevant, what they actually do, and whether your defenses survive those TTPs.</p>
+  </div>
+
+  <div class="threat-vs-generic">
+    <article class="generic">
+      <span>GENERIC PEN TEST</span><b>“What can I break?”</b>
+      <small>Useful, but bounded by the tester’s frameworks and experience.</small>
+    </article>
+    <div class="versus">VS</div>
+    <article class="intel">
+      <span>THREAT-INFORMED TEST</span><b>“What would APT12 do to us?”</b>
+      <small>Uses CTI, adversary TTPs, critical assets and realistic attack strategy.</small>
+    </article>
+  </div>
+
+  <div class="sequence-game gamebox">
+    <div class="game-title"><span>GAME 2 · BUILD THE PEN TEST</span><h3>Put the six intelligence-led stages in the correct order.</h3></div>
+    <div class="sequence-bank" id="pentestBank"></div>
+    <div class="sequence-target" id="pentestTarget"></div>
+    <div class="game-actions"><button id="checkPentest">Check sequence</button><button id="resetPentest">Reset</button></div>
+    <div class="feedback" id="pentestFeedback">Click cards in order to build the process.</div>
+  </div>
+
+  <div class="apt12-track">
+    <div><span>PROFILE</span><b>APT12 / Panda</b><small>High-tech · government · media</small></div><i>→</i>
+    <div><span>WEAPONIZE</span><b>Word / PDF</b><small>IXESHE malware</small></div><i>→</i>
+    <div><span>DELIVER</span><b>Spearphish</b><small>Target IT manager</small></div><i>→</i>
+    <div><span>PERSIST</span><b>Registry run key</b><small>Masquerading path</small></div><i>→</i>
+    <div><span>OBJECTIVE</span><b>Exfiltrate</b><small>C2 receives data</small></div>
+  </div>
+
+  <div class="deep-grid">
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 01</small><h3>Why intelligence-led?</h3><p>Adversary knowledge changes what you test.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>Four advantages</h3><ul><li>Real-time, real-world focus using current adversary TTPs.</li><li>Better view of what the adversary knows about the organization.</li><li>Countermeasures can be tied directly to observed attack strategies.</li><li>Supports holistic testing and purple-team / BAS activity.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 02</small><h3>Six-stage process</h3><p>CTI is added throughout the workflow.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>From planning to reporting</h3><ul><li>Planning and preparation.</li><li>Threat intelligence collection.</li><li>System scanning using adversary TTPs.</li><li>System exploitation under agreed rules.</li><li>Analysis and countermeasures.</li><li>Documentation and reporting for strategic, operational and tactical teams.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 03</small><h3>ABC + APT12</h3><p>A realistic test is driven by the adversary profile.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>APT12 exploitation perspective</h3><ul><li>APT12 targets high-tech organizations, media and governments for theft and espionage.</li><li>Weaponize Word/PDF content with IXESHE.</li><li>Deliver through spearphishing after reconnaissance.</li><li>Persist through registry modification.</li><li>The test succeeds when collected data reaches configured C2 infrastructure.</li></ul></div></div></button>
+  </div>
+</section>
+
+<section class="zone" id="risk">
+  <div class="zone-head">
+    <div><span class="zone-no">03</span><div class="eyebrow">SOURCE CODE + THIRD-PARTY RISK</div><h2>Not every bug matters equally.</h2></div>
+    <p>Threat intelligence helps prioritize the code, dependency and patching problems that matter to the adversary most likely to target your assets.</p>
+  </div>
+
+  <div class="risk-equation">
+    <button data-factor="threat"><span>THREAT</span><b>Who wants to attack?</b></button>
+    <i>+</i>
+    <button data-factor="vulnerability"><span>VULNERABILITY</span><b>What weakness can they exploit?</b></button>
+    <i>+</i>
+    <button data-factor="asset"><span>ASSET</span><b>What valuable thing is exposed?</b></button>
+    <i>=</i>
+    <div><span>RISK</span><b id="riskMeaning">Select each factor.</b></div>
+  </div>
+
+  <div class="risk-game gamebox">
+    <div class="game-title"><span>GAME 3 · RISK TRIAGE</span><h3 id="riskScenario">A public web portal contains a known injection bug and holds millions of identity records.</h3></div>
+    <div class="triage-grid" id="triageGrid"></div>
+    <button id="scoreRisk" class="check-btn">Score this risk</button>
+    <div class="feedback" id="riskFeedback">Pick the threat, vulnerability and asset that complete the scenario.</div>
+  </div>
+
+  <div class="third-party-strip">
+    <article><b>Before adoption</b><span>What standards and security measures were used?</span></article>
+    <article><b>Patch support</b><span>How often are security updates released?</span></article>
+    <article><b>Security testing</b><span>What testing standard and frequency?</span></article>
+    <article><b>Criticality</b><span>Web, DB and DNS services deserve extra scrutiny.</span></article>
+  </div>
+
+  <div class="deep-grid">
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 01</small><h3>Threat-led code analysis</h3><p>Find the bugs a specific adversary would care about.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>Prioritize source code with CTI</h3><ul><li>Standard static, dynamic and interactive analysis find weaknesses.</li><li>Threat modeling identifies applications, vectors and surfaces that matter to adversaries.</li><li>If APT28 targets public-facing applications, those applications move up the review queue.</li><li>Use adversary vectors alongside standards such as the OWASP Top 10.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 02</small><h3>Third-party dependencies</h3><p>Apache, Nginx, MySQL and APIs all bring inherited risk.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>What to ask vendors</h3><ul><li>Which security standards guided development?</li><li>How quickly and frequently are patches released?</li><li>How often is security testing performed?</li><li>Critical infrastructure dependencies need deeper scrutiny because compromise affects many services.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 03</small><h3>The Equifax lesson</h3><p>A released patch only helps if someone actually applies it.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>Patch discipline</h3><ul><li>The lecture uses Equifax as a lesson in delayed patching.</li><li>Third-party software needs a clear security and patch-execution policy.</li><li>Applications should remain current with released patches.</li><li>CTI helps prioritize patching by connecting threats, vulnerabilities and valuable assets.</li></ul></div></div></button>
+  </div>
+</section>
+
+<section class="zone alt" id="privacy">
+  <div class="zone-head">
+    <div><span class="zone-no">04</span><div class="eyebrow">DATA PRIVACY IN MODERN BUSINESS</div><h2>Secure data can still be used wrongly.</h2></div>
+    <p>Security protects data. Privacy governs whether the data should have been collected, how it is used, who receives it and whether the person had meaningful control.</p>
+  </div>
+
+  <div class="privacy-contrast">
+    <article><span>DATA SECURITY</span><b>Can unauthorized people access, change or destroy it?</b><small>Confidentiality · Integrity · Availability</small></article>
+    <article><span>DATA PRIVACY</span><b>Was it collected, stored and shared properly?</b><small>Purpose · Consent · Transparency · Control</small></article>
+  </div>
+
+  <div class="privacy-game gamebox">
+    <div class="game-title"><span>GAME 4 · SECURITY OR PRIVACY?</span><h3 id="privacyPrompt"></h3></div>
+    <div class="choice-row" id="privacyChoices"></div>
+    <div class="feedback" id="privacyFeedback"></div>
+  </div>
+
+  <div class="biometric-lab">
+    <div class="fingerprint">
+      <span class="ridge r1"></span><span class="ridge r2"></span><span class="ridge r3"></span><span class="ridge r4"></span><span class="ridge r5"></span>
+    </div>
+    <div>
+      <span>BIOMETRIC DATA</span>
+      <h3>Your fingerprint is not a password you can simply replace.</h3>
+      <p>The lecture emphasizes that biometric data may reveal more than identity, while the user may know very little about how captured biometric data is reused after collection.</p>
+    </div>
+  </div>
+
+  <div class="deep-grid">
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 01</small><h3>Security ≠ privacy</h3><p>An encrypted database can still violate privacy.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>Three privacy questions</h3><ul><li>How was the data legally collected?</li><li>How is the data stored?</li><li>How is it legally shared?</li><li>A technically secure repository can still violate privacy when data was collected without valid consent.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 02</small><h3>What users expect</h3><p>Protection, transparency and control over PII.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>PII expectations</h3><ul><li>Users expect active protection of personal information.</li><li>They want to know who uses the data and for what purpose.</li><li>Users should retain meaningful authority over personal-data utilization.</li><li>Sensitive data requires explicit explanation and consent.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 03</small><h3>Privacy regulation</h3><p>CTI sharing decisions sit inside a legal environment.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>Global privacy pressure</h3><ul><li>The lecture references GDPR, POPIA, PIPEDA, CISPA and CISA.</li><li>Examples include large privacy penalties involving Amazon, Telecom Italia, Google and Facebook.</li><li>The common goal is protection of user privacy throughout the information life cycle.</li><li>Privacy policy must reflect local, national, international and industry requirements.</li></ul></div></div></button>
+  </div>
+</section>
+
+<section class="zone" id="social">
+  <div class="zone-head">
+    <div><span class="zone-no">05</span><div class="eyebrow">SOCIAL ENGINEERING + THREAT INTELLIGENCE</div><h2>The easiest system to exploit may be the person using it.</h2></div>
+    <p>Threat actors use psychology because humans can route around strong technical controls. Defenders can use the same knowledge ethically to test awareness and design better safeguards.</p>
+  </div>
+
+  <div class="inbox-game">
+    <div class="inbox">
+      <div class="inbox-head"><span>GAME 5 · PHISHING INBOX</span><b>Which message would you investigate first?</b></div>
+      <div id="emailList"></div>
+    </div>
+    <div class="email-inspector">
+      <span>ANALYST VIEW</span>
+      <h3 id="emailTitle">Select a message.</h3>
+      <div id="emailBody" class="email-body">Inspect sender, urgency, context, link/attachment and whether the message fits the recipient.</div>
+      <div id="emailSignals" class="signals"></div>
+      <button id="classifyPhish" disabled>Mark as suspicious</button>
+      <div class="feedback" id="phishFeedback"></div>
+    </div>
+  </div>
+
+  <div class="phish-process">
+    <article><span>1</span><b>Reconnaissance</b><small>Know target + routines</small></article><i>→</i>
+    <article><span>2</span><b>Plan</b><small>Spearphish or mass?</small></article><i>→</i>
+    <article><span>3</span><b>Weaponize</b><small>Attachment / redirect</small></article><i>→</i>
+    <article><span>4</span><b>Listener</b><small>Confirm communication</small></article><i>→</i>
+    <article><span>5</span><b>Execute</b><small>Deliver the lure</small></article>
+  </div>
+
+  <div class="campaign-row">
+    <article><b>Gold Southfield</b><span>Malicious spam → ransomware</span></article>
+    <article><b>Dragonfly 2.0</b><span>Contract-themed spearphish → credential capture</span></article>
+    <article><b>Frankenstein</b><span>Phishing + user execution → malware</span></article>
+  </div>
+
+  <div class="deep-grid">
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 01</small><h3>Why social engineering works</h3><p>It attacks cognition rather than code.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>Human attack surface</h3><ul><li>Social engineering uses psychological manipulation to make people reveal or do something.</li><li>Techniques include phishing, spearphishing, smishing, baiting, shoulder surfing, tailgating and scareware.</li><li>The lecture notes that social-engineering techniques appear across the overwhelming majority of tracked threat groups.</li><li>It combines easily with technical attack vectors.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 02</small><h3>CTI analysts use it too</h3><p>Ethical assessment can expose awareness gaps.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>Defensive use</h3><ul><li>Analysts can impersonate adversaries to identify security-awareness weaknesses.</li><li>Findings reveal which user-focused attacks are most likely to succeed.</li><li>Results should feed training and awareness programs.</li><li>The lecture lists impersonation, eavesdropping, shoulder surfing, dumpster diving, tailgating and piggybacking as assessment techniques.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 03</small><h3>Five-step phishing process</h3><p>Good lures are built from information, not magic.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>From recon to execution</h3><ul><li>Reconnaissance makes the lure believable.</li><li>Plan the target scope and delivery method.</li><li>Weaponize the attachment or redirect path.</li><li>Prepare a listener to confirm resulting communication.</li><li>Deliver the lure and observe the outcome.</li></ul></div></div></button>
+  </div>
+</section>
+
+<section class="zone alt" id="mental">
+  <div class="zone-head">
+    <div><span class="zone-no">06</span><div class="eyebrow">ASSESSMENT CAMPAIGNS + MENTAL MODELS</div><h2>If users misunderstand the interface, the interface is part of the risk.</h2></div>
+    <p>People bring expectations from every system they have used before. Secure design should align with those expectations, clearly show what actions do, block unsafe behavior and explain why.</p>
+  </div>
+
+  <div class="mental-trio">
+    <article><span>AFFORDANCE</span><b>“What can I do here?”</b><small>Visible controls should suggest their action.</small></article>
+    <article><span>CONSTRAINT</span><b>“What am I stopped from doing — and why?”</b><small>Prevent unsafe action and explain the reason.</small></article>
+    <article><span>CONVENTION</span><b>“Does this behave like I expect?”</b><small>Use familiar, consistent patterns.</small></article>
+  </div>
+
+  <div class="ui-game gamebox">
+    <div class="game-title"><span>GAME 6 · FIX THE SECURITY UI</span><h3 id="uiScenario"></h3></div>
+    <div class="ui-preview" id="uiPreview"></div>
+    <div class="choice-row" id="uiChoices"></div>
+    <div class="feedback" id="uiFeedback"></div>
+  </div>
+
+  <div class="training-note">
+    <b>Assessment campaigns are not about embarrassing users.</b>
+    <span>They reveal where real people are likely to fail so the organization can improve training, filtering, interface design and defensive controls.</span>
+  </div>
+
+  <div class="deep-grid">
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 01</small><h3>Mental models</h3><p>Users operate from beliefs and prior experience.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>The big idea</h3><ul><li>Users rarely participate in the code or architecture but must still operate the finished system.</li><li>They rely on conceptual expectations formed by prior experience.</li><li>There are as many mental models as there are users.</li><li>TIP and SIEM interfaces should not create a large gap between the interface and the user’s ability.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 02</small><h3>Affordance · constraint · convention</h3><p>Three ways to reduce user confusion.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>Design alignment</h3><ul><li>Affordance: visible controls map clearly to system behavior.</li><li>Constraint: unsafe or unauthorized actions are prevented and explained.</li><li>Convention: standard cues match users’ existing expectations.</li><li>Visible feedback and clear labels help direct users toward secure choices.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 03</small><h3>Assessment campaigns</h3><p>Use realistic scenarios to improve behavior.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>What campaigns achieve</h3><ul><li>Mimic real attacks to raise employee awareness.</li><li>Reveal practical strengthening measures such as better filtering.</li><li>Help reduce the financial impact of future breaches.</li><li>Large organizations often use dedicated awareness teams working with CTI analysts.</li></ul></div></div></button>
+  </div>
+</section>
+
+<section class="zone" id="architecture">
+  <div class="zone-head">
+    <div><span class="zone-no">07</span><div class="eyebrow">INTELLIGENCE-BASED DEVSECOPS ARCHITECTURE</div><h2>Design. Build. Run. Defend. Then feed what you learn back.</h2></div>
+    <p>A defendable architecture is not a one-time hardening project. It continuously exchanges design knowledge, runtime reality and adversary intelligence.</p>
+  </div>
+
+  <div class="loop-game">
+    <div class="loop-orbit">
+      <button data-phase="design" class="phase p-design"><span>DESIGN</span><small>threat model + controls</small></button>
+      <button data-phase="build" class="phase p-build"><span>BUILD</span><small>components + logs</small></button>
+      <button data-phase="run" class="phase p-run"><span>RUN</span><small>sustain + configure</small></button>
+      <button data-phase="defend" class="phase p-defend"><span>DEFEND</span><small>TTPs + visibility</small></button>
+      <div class="loop-core"><b>CTI</b><span>knowledge flows both ways</span></div>
+    </div>
+    <div class="loop-panel">
+      <span>GAME 7 · KNOWLEDGE FLOW</span>
+      <h3 id="phaseTitle">Choose a phase.</h3>
+      <p id="phaseText">Each phase both informs and is informed by the others.</p>
+      <div class="phase-challenge" id="phaseChallenge"></div>
+    </div>
+  </div>
+
+  <div class="defendable-grid">
+    <article><b>Resilience</b><span>Operate under attack, survive and recover.</span></article>
+    <article><b>Threat modeling</b><span>Build analysis into architecture planning.</span></article>
+    <article><b>System verification</b><span>VA, pen test, code analysis, input validation, control assessment.</span></article>
+    <article><b>Security administration</b><span>Patch, update and upgrade using policy + CTI.</span></article>
+    <article><b>Threat countermeasures</b><span>Turn CTI into deployable rules and detections.</span></article>
+  </div>
+
+  <div class="enterprise-stack">
+    <div class="layer strategic"><span>STRATEGIC</span><b>Policies · Standards · Compliance · Risk</b></div>
+    <div class="layer management"><span>SECURITY MANAGEMENT</span><b>Coordinate + enforce</b></div>
+    <div class="layer logical">
+      <span>LOGICAL SECURITY</span>
+      <div><b>Application</b><b>Data</b><b>IAM</b><b>Endpoint</b><b>Threat Response</b></div>
+    </div>
+    <div class="layer physical"><span>PHYSICAL</span><b>Protect the assets everything else depends on</b></div>
+  </div>
+
+  <div class="vmc">
+    <article><span>VISIBILITY</span><b>Can we see abnormal behavior and access?</b></article>
+    <article><span>MANAGEABILITY</span><b>Can we change rules, patches and configuration quickly?</b></article>
+    <article><span>SURVIVABILITY</span><b>Can the system continue operating and recover under attack?</b></article>
+  </div>
+
+  <div class="deep-grid">
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 01</small><h3>Five characteristics</h3><p>What makes the architecture defendable?</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>Defendable architecture</h3><ul><li>Resilience.</li><li>Threat modeling.</li><li>System verification.</li><li>Security administration.</li><li>Threat countermeasures generated from intelligence.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 02</small><h3>Threat analysis flow</h3><p>Business needs anchor the whole process.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>From mission to controls</h3><ul><li>Identify assets and define the attack surface.</li><li>Decompose the system and identify attack vectors.</li><li>List relevant threat actors.</li><li>Analyze, assess and triage.</li><li>Apply controls using internal/external intelligence and control-effectiveness knowledge.</li></ul></div></div></button>
+    <button class="flip"><div class="flip-in"><div class="face front"><small>DEEP DIVE 03</small><h3>Visibility · manageability · survivability</h3><p>Three design goals to build in from day one.</p><em>Flip for PPT detail ↻</em></div><div class="face back"><h3>Operational design goals</h3><ul><li>Visibility identifies abnormal activity and user access.</li><li>Manageability adapts patches, upgrades, configuration, rules and policy.</li><li>Survivability keeps regular operation available during and after attack.</li><li>The lecture stresses designing these in rather than retrofitting later.</li></ul></div></div></button>
+  </div>
+</section>
+
+<section class="zone final" id="final">
+  <div class="zone-head">
+    <div><span class="zone-no">08</span><div class="eyebrow">FINAL LAB</div><h2>Can you make security usable?</h2></div>
+    <p>Ten questions across threat modeling, intelligence-led testing, risk, privacy, social engineering, mental models and defendable architecture.</p>
+  </div>
+  <div id="finalQuiz" class="final-grid"></div>
+</section>
+</main>
+
+<footer><b>COMP6012 · WEEK 12</b><span>Usable Security: Threat Intelligence as Part of the Process</span><span>Security UX Lab</span></footer>
+<script src="app.js"></script>
+</body>
+</html>
